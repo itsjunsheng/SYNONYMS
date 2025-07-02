@@ -5,7 +5,9 @@ import { Groq } from "groq-sdk"
 
 dotenv.config()
 const app = express()
-const port = 3001
+
+// Use Render's PORT or fallback to local dev port
+const PORT = process.env.PORT || 3001
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
@@ -75,6 +77,7 @@ app.post("/api/word", async (req, res) => {
   return res.status(400).json({ error: "Invalid action" })
 })
 
-app.listen(port, () => {
-  console.log(`server running at http://localhost:${port}`)
+// ✅ Listen using Render-compatible PORT
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
 })
