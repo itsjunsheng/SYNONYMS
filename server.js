@@ -18,24 +18,30 @@ const clueMemory = new Map()
 
 async function generateUniqueClue(word, usedClues) {
   let attempt = 0
-  const maxRetries = 5
+  const maxRetries = 10
 
   while (attempt < maxRetries) {
-    const prompt = `
-Give a single-word English synonym for "${word}" that is NOT one of the following: ${usedClues.length > 0 ? usedClues.join(", ") : "[none]"}.
-- Return only ONE word and nothing else.
-- It must be a valid synonym.
-- Try not to make the synonym too obvious.
-- Do NOT include explanations or punctuation.
-`
 
+    const systemPrompt = `
+You are a helpful AI that responds with only a single English word that is a valid synonym of the given word.
+- The word must be in lowercase.
+- It must be a valid English synonym.
+- Do not include explanations, punctuation, or multiple words.
+- The response must contain exactly one word and nothing else.
+`
+  const userPrompt = `
+Give a single-word English synonym for "${word}" that is NOT one of the following: ${usedClues.length > 0 ? usedClues.join(", ") : "[none]"}.
+`
     const response = await groq.chat.completions.create({
       model: "llama-3.1-8b-instant",
-      messages: [{ role: "user", content: prompt }],
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt }
+      ],
       temperature: 1,
       max_completion_tokens: 50,
       top_p: 1,
-      stream: false,
+      stream: false
     })
 
     const output = response.choices[0]?.message?.content.trim().toLowerCase()
@@ -52,7 +58,7 @@ app.get("/", (req, res) => {
 })
 
 app.post("/api/word", async (req, res) => {
-  const { action, hiddenWord, previousGuesses = [] } = req.body
+  const { action, hiddenWord } = req.body
 
   if (action === "clue") {
     if (!hiddenWord) {
@@ -77,7 +83,7 @@ app.post("/api/word", async (req, res) => {
   return res.status(400).json({ error: "Invalid action" })
 })
 
-// ✅ Listen using Render-compatible PORT
+// Listen using Render-compatible PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })

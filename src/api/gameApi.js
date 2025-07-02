@@ -1,11 +1,10 @@
-export const getNewClue = async ({ hiddenWord, previousGuesses }) => {
+export const getNewClue = async ({ hiddenWord }) => {
   const res = await fetch("https://synonyms-busf.onrender.com/api/word", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       action: "clue",
       hiddenWord,
-      previousGuesses,
     }),
   })
 
