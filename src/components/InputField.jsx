@@ -21,7 +21,7 @@ export default function InputField({ onSubmit, disabled }) {
   // Clean input: only allow lowercase letters (a-z)
   const handleInput = (e) => {
     const value = e.target.value
-    const cleanValue = value.replace(/[^a-zA-G]/g, "") // remove anything not a-z
+    const cleanValue = value.replace(/[^a-zA-Z]/g, "") // remove anything not a-z
     if (value !== cleanValue) {
       e.target.value = cleanValue
     }
@@ -31,7 +31,7 @@ export default function InputField({ onSubmit, disabled }) {
   const handlePaste = (e) => {
     e.preventDefault()
     const pasted = (e.clipboardData || window.clipboardData).getData("text")
-    const cleanText = pasted.replace(/[^a-zA-G]/g, "")
+    const cleanText = pasted.replace(/[^a-zA-Z]/g, "")
     document.execCommand("insertText", false, cleanText)
   }
 
