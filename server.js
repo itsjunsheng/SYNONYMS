@@ -24,8 +24,7 @@ async function generateUniqueClue(word, usedClues) {
 
     const systemPrompt = `
 You are a helpful AI that responds with only a single English word that is a valid synonym of the given word.
-- The word must be in lowercase.
-- It must be a valid English synonym.
+- The word must be a common English word.
 - Do not include explanations, punctuation, or multiple words.
 - The response must contain exactly one word and nothing else.
 `
